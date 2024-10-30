@@ -30,7 +30,7 @@ const router = new Router();
 
 //cors(要在路由之後)
 app.use(oakCors({
-    origin: ["https://127.0.0.1:5500", "https://localhost:5500", "https://7txnmc12-5500.asse.devtunnels.ms"],
+    origin: ["https://127.0.0.1:5500", "https://localhost:5500", "https://testfromend.web.app"],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     credentials: true,
     allowedHeaders: ["Cookie", "Content-Type", "Authorization"]

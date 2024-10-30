@@ -48,7 +48,7 @@ app.use(oakCors({
 //         ctx.response.status = 200;
 //         return;
 //     }
-    
+
 //     await next();
 // });
 
@@ -79,12 +79,17 @@ router.post('/', async (req) => {
 
 
 console.log(`啟動! https://${HOST}:${PORT}`)
-await app.listen({
-    port: Number(PORT),
-    hostname: HOST,
-    secure: true,
-    cert: Deno.readTextFileSync("./cert/certificate.crt"),
-    key: Deno.readTextFileSync("./cert/private.key"),
-});
 
+// 測試環境
+// await app.listen({
+//     port: Number(PORT),
+//     hostname: HOST,
+//     secure: true,
+//     cert: Deno.readTextFileSync("./cert/certificate.crt"),
+//     key: Deno.readTextFileSync("./cert/private.key"),
+// });
+
+
+// deno deploy環境
+await app.listen({ port: Number(PORT) });
 

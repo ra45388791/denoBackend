@@ -9,6 +9,7 @@ import { CreateRoomPath, ReSendcode, tokenType } from "../describe/enum/API_Enum
 import { UserSet, reSend } from "../describe/enum/API_Type.ts";
 import { JWT_Encrypt, TokenCheck } from "../Factory/parseData.ts";
 import { createUserSet, createCookieSet, createReSend } from "../Factory/globalFunc.ts";
+import { getCookies } from "https://deno.land/std@0.224.0/http/cookie.ts";
 
 
 const create_room: Router = new Router();
@@ -20,7 +21,6 @@ create_room.get('/', async (record) => {
     const req: Request = record.request;
     const loginToken = await TokenCheck(req, tokenType.LOGIN_TOKEN) as string;
     const token = await TokenCheck(req, tokenType.WEB_TOKEN) as UserSet;
-
     //!tips：如果進來的是開過房而且還在玩的房主，跳確認視窗，確認要繼續嗎，繼續會把房主狀態清掉
 
     if (!token) {

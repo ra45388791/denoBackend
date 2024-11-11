@@ -1,9 +1,13 @@
 import { load } from "https://deno.land/std@0.224.0/dotenv/mod.ts"; //env變數
 await load({ export: true })
-import { initializeApp } from "@firebase/app";
+import { initializeApp, } from "@firebase/app";
 // import { initializeApp } from "npm:firebase/app";
-import { getFirestore, collection, Firestore } from "@firebase/firestore";
+import { getFirestore, collection, Firestore, initializeFirestore } from "@firebase/firestore";
 import { CollectionReference } from "@firebase/firestore";
+
+//sqllite
+import { DB } from "https://deno.land/x/sqlite@v3.9.1/mod.ts";
+
 
 type F_DB = {
     room: CollectionReference
@@ -24,9 +28,12 @@ const firebaseConfig: any = {
 try {
 
     //建立連接
-    firebaseApp = initializeApp(firebaseConfig, "firebase");
+    // firebaseApp = initializeApp(firebaseConfig, "firebase");
+    firebaseApp = initializeApp(firebaseConfig);
+
     //建立服務(Store)
     store = getFirestore(firebaseApp);
+    // store = initializeFirestore(firebaseApp, { experimentalAutoDetectLongPolling: true });
 
     //建立資料庫
     // const room: CollectionReference = collection(store, "Room");

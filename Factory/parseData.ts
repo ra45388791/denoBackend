@@ -4,7 +4,8 @@ import { Cbc, Padding } from "https://deno.land/x/crypto/block-modes.ts";
 import { decodeBase64, encodeBase64 } from "https://deno.land/std@0.221.0/encoding/base64.ts";
 import { tokenType } from "../describe/enum/API_Enum.ts";
 import { UserSet } from "../describe/enum/API_Type.ts";
-import { Request } from "@oak/oak";
+import { Cookies, Request } from "@oak/oak";
+import { getCookies } from "https://deno.land/std@0.224.0/http/cookie.ts";
 // import { Question_Mode_0, Question_Mode_1, Question_Type } from '@src/describe/type/GameType';
 
 
@@ -76,7 +77,7 @@ async function JWT_Decrypt(jwtString: string): Promise<any> {
     //key
     const key = await JWT_createKey(keyBuf)
 
-    
+
 
     try {
         result = await verify(jwtString, key);
@@ -100,15 +101,18 @@ async function JWT_createKey(keyBuffer: Uint8Array) {
 
 async function TokenCheck(req: Request, token: tokenType): Promise<string | UserSet | null> {
     // const tokenData = req.cookies[token];
-    const tokenData = req.headers.get(token);
-    console.log(tokenData);
-    if (tokenData === null || tokenData === undefined || tokenData.trim() === '') { return null; }
+    // const tokenData = req.headers.get(token);
+    // const tokenData = req.headers.get('cookie');
+    const cookies: Record<string, string> = getCookies(req.headers);
+    const tokenStr: string = cookies[token];
+
+    if (tokenStr === null || tokenStr === undefined) { return null; }
 
     switch (token) {
         case tokenType.LOGIN_TOKEN: //登入
-            return await JWT_Decrypt(tokenData) as string | null;
+            return await JWT_Decrypt(tokenStr) as string | null;
         case tokenType.WEB_TOKEN:   //參數
-            return await JWT_Decrypt(tokenData) as UserSet;
+            return await JWT_Decrypt(tokenStr) as UserSet;
     }
     return null;
 }

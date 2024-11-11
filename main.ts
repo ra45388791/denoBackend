@@ -10,6 +10,8 @@ import { deleteCookie, getCookies, getSetCookies, setCookie } from "https://deno
 // import Manber from './API/Manber';
 import create_room from './API/create_room.ts';
 import player_room_api from "./API/player_room_api.ts";
+import { ReSendcode } from "./describe/enum/API_Enum.ts";
+import { createReSend } from "./Factory/globalFunc.ts";
 // import PlayerRoom from './API/PlayerRoomApi.ts';
 
 
@@ -30,35 +32,19 @@ const router = new Router();
 
 //cors(要在路由之後)
 app.use(oakCors({
-    origin: ["https://127.0.0.1:5500", "https://localhost:5500", "https://testfromend.web.app"],
+    origin: ["http://127.0.0.1:5500", "https://127.0.0.1:5500", "http://localhost:5500", "https://localhost:5500", "https://testfromend.web.app", "https://testfromend.firebaseapp.com"],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     credentials: true,
-    allowedHeaders: ["Cookie", "Content-Type", "Authorization"]
+    allowedHeaders: ["Cookie", "Content-Type", "Authorization", 'credentials']
     // allowedHeaders: ["Cookie", "Content-Type"]
 }));
-
-// app.use(async (ctx, next) => {
-//     ctx.response.headers.set("Access-Control-Allow-Origin", "https://7txnmc12-5500.asse.devtunnels.ms");
-//     ctx.response.headers.set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-//     ctx.response.headers.set("Access-Control-Allow-Headers", "Cookie, Content-Type, Authorization");
-//     ctx.response.headers.set("Access-Control-Allow-Credentials", "true");
-
-//     // 如果是預檢請求，直接返回 200
-//     if (ctx.request.method === "OPTIONS") {
-//         ctx.response.status = 200;
-//         return;
-//     }
-
-//     await next();
-// });
 
 
 router.use("/createroom", create_room.routes(), create_room.allowedMethods());
 router.use("/player_room_api", player_room_api.routes(), player_room_api.allowedMethods())
 
 //主路由
-app.use(router.routes());
-app.use(router.allowedMethods());
+app.use(router.routes(), router.allowedMethods());
 
 router.get('/', async (req) => {
     console.log("啟動get")
@@ -69,11 +55,11 @@ router.get('/', async (req) => {
     // const results: Array<any> = docs.docs.map(doc => doc.data());
     // req.response.body = JSON.stringify(results);
 
-    req.response.body = "server 啟動成功";
+    req.response.body = createReSend(ReSendcode.Success, true, { body: "server 啟動成功" });
     req.response.status = 200;
 });
 router.post('/', async (req) => {
-    req.response.body = "server post成功";
+    req.response.body = createReSend(ReSendcode.Success, true, { body: "server post成功" });
     req.response.status = 200;
 });
 
@@ -84,9 +70,9 @@ console.log(`啟動! https://${HOST}:${PORT}`)
 // await app.listen({
 //     port: Number(PORT),
 //     hostname: HOST,
-//     secure: true,
-//     cert: Deno.readTextFileSync("./cert/certificate.crt"),
-//     key: Deno.readTextFileSync("./cert/private.key"),
+//     // secure: true,
+//     // cert: Deno.readTextFileSync("./cert/certificate.crt"),
+//     // key: Deno.readTextFileSync("./cert/private.key"),
 // });
 
 
